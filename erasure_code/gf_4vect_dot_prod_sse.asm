@@ -258,20 +258,20 @@
 section .text
 
 %ifidn PS,8				;64-bit code
- %define xmask0f   xmm14
+ %define xmask0f   xmm11
  %define xgft1_lo  xmm2
  %define xgft1_hi  xmm3
- %define xgft2_lo  xmm11
- %define xgft2_hi  xmm4
- %define xgft3_lo  xmm9
- %define xgft3_hi  xmm5
- %define xgft4_lo  xmm7
- %define xgft4_hi  xmm6
+ %define xgft2_lo  xmm4
+ %define xgft2_hi  xmm5
+ %define xgft3_lo  xmm6
+ %define xgft3_hi  xmm7
+ %define xgft4_lo  xmm8
+ %define xgft4_hi  xmm9
 
  %define x0     xmm0
  %define xtmpa  xmm1
- %define xp1    xmm8
- %define xp2    xmm10
+ %define xp1    xmm10
+ %define xp2    xmm14
  %define xp3    xmm12
  %define xp4    xmm13
 %else
