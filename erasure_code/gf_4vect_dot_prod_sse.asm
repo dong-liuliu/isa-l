@@ -345,6 +345,7 @@ func(gf_4vect_dot_prod_sse)
 
 	movdqa	xtmpa, x0		;Keep unshifted copy of src
 	psraw	x0, 4			;Shift to put high nibble into bits 4-0
+	movdqa  xmask0f, [mask0f]
 	pand	x0, xmask0f		;Mask high src nibble in bits 4-0
 	pand	xtmpa, 	xmask0f		;Mask low src nibble in bits 4-0
  %else					;32-bit code
