@@ -258,9 +258,9 @@
 section .text
 
 %ifidn PS,8				;64-bit code
- %define xmask0f   xmm14
- %define xgft1_lo  xmm2
- %define xgft1_hi  xmm3
+ %define xmask0f   xmm8
+ %define xgft1_lo  xmm0
+ %define xgft1_hi  xmm1
  %define xgft2_lo  xmm11
  %define xgft2_hi  xmm4
  %define xgft3_lo  xmm9
@@ -268,8 +268,8 @@ section .text
  %define xgft4_lo  xmm7
  %define xgft4_hi  xmm6
 
- %define x0     xmm0
- %define xtmpa  xmm1
+ %define x0     xmm2
+ %define xtmpa  xmm3
  %define xp1    xmm8
  %define xp2    xmm10
  %define xp3    xmm12
