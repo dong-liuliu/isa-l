@@ -339,7 +339,7 @@ func(gf_4vect_dot_prod_sse)
 	movdqu	xgft4_lo, [tmp+vskip3]		;Load array Dx{00}, Dx{01}, ..., Dx{0f}
 	movdqu	xgft4_hi, [tmp+vskip3+16]	;     "     Dx{00}, Dx{10}, ..., Dx{f0}
 
-	XLDR	x0, 	[ptr+pos]	;Get next source vector
+	XLDR	x0, 	xgft1_lo	;Get next source vector
 	add	tmp, 	32
 	add	vec_i, 	PS
 
