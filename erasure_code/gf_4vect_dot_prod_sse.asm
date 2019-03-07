@@ -340,6 +340,7 @@ func(gf_4vect_dot_prod_sse)
 	movdqu	xgft4_hi, [tmp+vskip3+16]	;     "     Dx{00}, Dx{10}, ..., Dx{f0}
 
 	XLDR	x0, 	[ptr+pos]	;Get next source vector
+	movdqu	xp4,	x0
 	add	tmp, 	32
 	add	vec_i, 	PS
 
@@ -395,7 +396,7 @@ func(gf_4vect_dot_prod_sse)
 	pshufb	xgft4_hi, x0		;Lookup mul table of high nibble
 	pshufb	xgft4_lo, xtmpa		;Lookup mul table of low nibble
 	pxor	xgft4_hi, xgft4_lo	;GF add high and low partials
-	pxor	xp4, xgft4_hi		;xp4 += partial
+;	pxor	xp4, xgft4_hi		;xp4 += partial
 
 	cmp	vec_i, vec
 	jl	.next_vect
