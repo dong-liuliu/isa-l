@@ -245,6 +245,7 @@ AS_IF([test "x$intel_cet_enabled" = "xyes"], [
   if test $as_feature_level -ge 6 ; then
     AC_DEFINE(HAVE_AS_KNOWS_AVX512, [1], [Assembler can do AVX512.])
     have_as_knows_avx512=yes
+  #  AC_MSG_RESULT([Skip Assembler whether understand AVX512 opcodes for test.])
   else
     AC_MSG_RESULT([Assembler does not understand AVX512 opcodes.  Consider upgrading for best performance.])
   fi

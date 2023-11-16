@@ -62,7 +62,7 @@ void ec_encode_perf(int m, int k, u8 * a, u8 * g_tbls, u8 ** buffs, struct perf 
 {
 	ec_init_tables(k, m - k, &a[k * k], g_tbls);
 	BENCHMARK(start, BENCHMARK_TIME,
-		  ec_encode_data_avx512_gfni(TEST_LEN(m), k, m - k, &a[k * k], buffs, &buffs[k]));
+		  ec_encode_data_avx2_gfni(TEST_LEN(m), k, m - k, &a[k * k], buffs, &buffs[k]));
 	
 	printf("erasure_code_encode" TEST_TYPE_STR ": ");
 	perf_print(*start, (long long)(TEST_LEN(m)) * (m));
@@ -86,7 +86,7 @@ void ec_encode_perf(int m, int k, u8 * a, u8 * g_tbls, u8 ** buffs, struct perf 
 	printf("general end\n`");
 
 	BENCHMARK(start, BENCHMARK_TIME,
-		  ec_encode_data_avx512_gfni(TEST_LEN(m), k, m - k, &a[k * k], buffs, &buffs[k]));
+		  ec_encode_data_avx2_gfni(TEST_LEN(m), k, m - k, &a[k * k], buffs, &buffs[k]));
 	
 	printf("erasure_code_encode" TEST_TYPE_STR ": ");
 	perf_print(*start, (long long)(TEST_LEN(m)) * (m));
@@ -124,7 +124,7 @@ int ec_decode_perf(int m, int k, u8 * a, u8 * g_tbls, u8 ** buffs, u8 * src_in_e
 	// Recover data
 	ec_init_tables(k, nerrs, c, g_tbls);
 	BENCHMARK(start, BENCHMARK_TIME,
-		  ec_encode_data_avx512_gfni(TEST_LEN(m), k, nerrs, c, recov, temp_buffs));
+		  ec_encode_data_avx2_gfni(TEST_LEN(m), k, nerrs, c, recov, temp_buffs));
 
 	return 0;
 }
