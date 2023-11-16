@@ -40,7 +40,7 @@
 #if !defined(COLD_TEST) && !defined(TEST_CUSTOM)
 // Cached test, loop many times over small dataset
 # define TEST_SOURCES 32
-# define TEST_LEN(m)  128 * 1024 //((128*1024 / m) & ~(64-1))
+# define TEST_LEN(m)  128*1024 //((128*1024 / m) & ~(64-1))
 # define TEST_TYPE_STR "_warm"
 #elif defined (COLD_TEST)
 // Uncached test.  Pull from large mem base.
@@ -62,7 +62,29 @@ void ec_encode_perf(int m, int k, u8 * a, u8 * g_tbls, u8 ** buffs, struct perf 
 {
 	ec_init_tables(k, m - k, &a[k * k], g_tbls);
 	BENCHMARK(start, BENCHMARK_TIME,
+		  ec_encode_data_avx512_gfni(TEST_LEN(m), k, m - k, &a[k * k], buffs, &buffs[k]));
+	
+	printf("erasure_code_encode" TEST_TYPE_STR ": ");
+	perf_print(*start, (long long)(TEST_LEN(m)) * (m));
+
+	for (int i = 0; i < m; i++) {
+		printf("vector %d: 0x%x\n", i, buffs[i][0]);
+	}
+	printf("gfni end\n");
+
+#if 0	
+	struct perf start2;
+	BENCHMARK(&start2, BENCHMARK_TIME,
 		  ec_encode_data(TEST_LEN(m), k, m - k, g_tbls, buffs, &buffs[k]));
+	
+	printf("erasure_code_encode" TEST_TYPE_STR ": ");
+	perf_print(start2, (long long)(TEST_LEN(m)) * (m));
+
+	for (int i = 0; i < m; i++) {
+		printf("vector %d: 0x%x\n", i, buffs[i][0]);
+	}
+	printf("general end\n`");
+#endif
 }
 
 int ec_decode_perf(int m, int k, u8 * a, u8 * g_tbls, u8 ** buffs, u8 * src_in_err,
@@ -91,7 +113,7 @@ int ec_decode_perf(int m, int k, u8 * a, u8 * g_tbls, u8 ** buffs, u8 * src_in_e
 	// Recover data
 	ec_init_tables(k, nerrs, c, g_tbls);
 	BENCHMARK(start, BENCHMARK_TIME,
-		  ec_encode_data(TEST_LEN(m), k, nerrs, g_tbls, recov, temp_buffs));
+		  ec_encode_data_avx512_gfni(TEST_LEN(m), k, nerrs, c, recov, temp_buffs));
 
 	return 0;
 }
@@ -150,12 +172,13 @@ int main(int argc, char *argv[])
 
 	// Start encode test
 	ec_encode_perf(m, k, a, g_tbls, buffs, &start);
-	printf("erasure_code_encode" TEST_TYPE_STR ": ");
-	perf_print(start, (long long)(TEST_LEN(m)) * (m));
 
 	// Start decode test
 	check = ec_decode_perf(m, k, a, g_tbls, buffs, src_in_err, src_err_list, nerrs,
 			       temp_buffs, &start);
+
+	printf("erasure_code_decode" TEST_TYPE_STR ": ");
+	perf_print(start, (long long)(TEST_LEN(m)) * (k + nerrs));
 
 	if (check == BAD_MATRIX) {
 		printf("BAD MATRIX\n");
@@ -168,9 +191,6 @@ int main(int argc, char *argv[])
 			return -1;
 		}
 	}
-
-	printf("erasure_code_decode" TEST_TYPE_STR ": ");
-	perf_print(start, (long long)(TEST_LEN(m)) * (k + nerrs));
 
 	printf("done all: Pass\n");
 	return 0;

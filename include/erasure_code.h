@@ -98,6 +98,9 @@ void ec_init_tables(int k, int rows, unsigned char* a, unsigned char* gftbls);
 void ec_encode_data(int len, int k, int rows, unsigned char *gftbls, unsigned char **data,
 		    unsigned char **coding);
 
+void ec_encode_data_avx512_gfni(int len, int k, int rows, unsigned char *g_tbls,
+			   unsigned char **data, unsigned char **coding);
+
 /**
  * @brief Generate or decode erasure codes on blocks of data, runs baseline version.
  *
