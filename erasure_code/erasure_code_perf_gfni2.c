@@ -70,20 +70,8 @@ void ec_encode_perf(int m, int k, u8 * a, u8 * g_tbls, u8 ** buffs, struct perf 
 	for (int i = 0; i < m; i++) {
 		printf("vector %d: 0x%x\n", i, buffs[i][0]);
 	}
-	printf("gfni end\n");
+	printf("warm up\n");
 
-#if 1	
-	struct perf start2;
-	BENCHMARK(&start2, BENCHMARK_TIME,
-		  ec_encode_data(TEST_LEN(m), k, m - k, g_tbls, buffs, &buffs[k]));
-	
-	printf("erasure_code_encode" TEST_TYPE_STR ": ");
-	perf_print(start2, (long long)(TEST_LEN(m)) * (m));
-
-	for (int i = 0; i < m; i++) {
-		printf("vector %d: 0x%x\n", i, buffs[i][0]);
-	}
-	printf("general end\n`");
 
 	BENCHMARK(start, BENCHMARK_TIME,
 		  ec_encode_data_avx2_gfni(TEST_LEN(m), k, m - k, &a[k * k], buffs, &buffs[k]));
@@ -94,8 +82,42 @@ void ec_encode_perf(int m, int k, u8 * a, u8 * g_tbls, u8 ** buffs, struct perf 
 	for (int i = 0; i < m; i++) {
 		printf("vector %d: 0x%x\n", i, buffs[i][0]);
 	}
-	printf("gfni end\n");
-#endif
+	printf("gfni_avx2 end\n");
+
+	BENCHMARK(start, BENCHMARK_TIME,
+		  ec_encode_data_avx2(TEST_LEN(m), k, m - k, g_tbls, buffs, &buffs[k]));
+	
+	printf("erasure_code_encode" TEST_TYPE_STR ": ");
+	perf_print(*start, (long long)(TEST_LEN(m)) * (m));
+
+	for (int i = 0; i < m; i++) {
+		printf("vector %d: 0x%x\n", i, buffs[i][0]);
+	}
+	printf("avx2 end\n");
+
+
+	BENCHMARK(start, BENCHMARK_TIME,
+		  ec_encode_data_avx512_gfni(TEST_LEN(m), k, m - k, &a[k * k], buffs, &buffs[k]));
+	
+	printf("erasure_code_encode" TEST_TYPE_STR ": ");
+	perf_print(*start, (long long)(TEST_LEN(m)) * (m));
+
+	for (int i = 0; i < m; i++) {
+		printf("vector %d: 0x%x\n", i, buffs[i][0]);
+	}
+	printf("gfni_avx512 end\n");
+
+
+	BENCHMARK(start, BENCHMARK_TIME,
+		  ec_encode_data_avx512(TEST_LEN(m), k, m - k, g_tbls, buffs, &buffs[k]));
+	
+	printf("erasure_code_encode" TEST_TYPE_STR ": ");
+	perf_print(*start, (long long)(TEST_LEN(m)) * (m));
+
+	for (int i = 0; i < m; i++) {
+		printf("vector %d: 0x%x\n", i, buffs[i][0]);
+	}
+	printf("avx512 end\n");
 }
 
 int ec_decode_perf(int m, int k, u8 * a, u8 * g_tbls, u8 ** buffs, u8 * src_in_err,

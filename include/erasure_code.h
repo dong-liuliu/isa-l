@@ -104,6 +104,9 @@ void ec_encode_data_avx512_gfni(int len, int k, int rows, unsigned char *g_tbls,
 void ec_encode_data_avx2_gfni(int len, int k, int rows, unsigned char *g_tbls,
 			   unsigned char **data, unsigned char **coding);
 
+void ec_encode_data_avx512(int len, int k, int rows, unsigned char *g_tbls,
+			   unsigned char **data, unsigned char **coding);
+
 /**
  * @brief Generate or decode erasure codes on blocks of data, runs baseline version.
  *
